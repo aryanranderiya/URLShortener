@@ -44,4 +44,11 @@ input {
   margin: 0.5%;
   border-radius: 10px;
   border: none;
+  color: black;
+}
+
+.submit_btn {
+  color: white;
+  background-color: #00bbff;
+  font-weight: bold;
 }
