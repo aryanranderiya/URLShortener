@@ -1,23 +1,31 @@
 import "./App.css";
 import React, { useState } from "react";
-import axios from "axios";
 
 function Form() {
-  const [appData, setAppData] = useState({
+  const [formData, setFormData] = useState({
     shortURL: "",
     longURL: "",
   });
 
-  const onSubmit = (e) => {
-    axios
-      .post("/connect", appData)
-      .then((data) => console.log(data.data))
-      .catch((error) => console.log(error));
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await fetch("/insert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onChangeData = (e) => {
-    setAppData({
-      ...appData,
+    setFormData({
+      ...formData,
       [e.target.name]: e.target.value,
     });
   };
@@ -25,20 +33,22 @@ function Form() {
   return (
     <>
       <h1>URL Shortener</h1>
-      <form className="form" onSubmit={() => onSubmit}>
+      <form className="form" onSubmit={onSubmit}>
         <input
+          key="longURL"
           type="url"
           placeholder="Enter long URL to shorten:"
-          value={appData.longURL}
+          value={formData.longURL}
           name="longURL"
           onChange={onChangeData}
           required
         ></input>
 
         <input
-          type="url"
+          key="shortURL"
+          type="text"
           placeholder="Enter short URL:"
-          value={appData.shortURL}
+          value={formData.shortURL}
           name="shortURL"
           onChange={onChangeData}
           required
