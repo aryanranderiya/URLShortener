@@ -4,9 +4,7 @@ import { nanoid } from "nanoid";
 
 function Form() {
   const [numberCharacters, setNumberCharacters] = useState(5);
-
-  const final_url = document.querySelector(".final_url");
-
+  const [finalURL, setFinalURL] = useState(null);
   const [formData, setFormData] = useState({
     shortURL: nanoid(5),
     longURL: "",
@@ -23,7 +21,8 @@ function Form() {
         },
         body: JSON.stringify(formData),
       });
-      final_url.style.opacity = "1";
+      setFinalURL("http://localhost:3000/l/" + formData.shortURL);
+      document.querySelector(".final_url").style.visibility = "visible";
     } catch (error) {
       console.log(error);
     }
@@ -42,12 +41,21 @@ function Form() {
       ...formData,
       shortURL: nanoid(numberCharacters),
     });
-    final_url.style.opacity = "0";
+    document.querySelector(".final_url").style.visibility = "hidden";
   };
 
+  const copyUrl = () => {
+    alert("URL Copied! ", finalURL);
+    navigator.clipboard.writeText(finalURL);
+  };
+  const handleReload = () => {
+    window.location.reload();
+  };
   return (
     <>
-      <h1>URL Shortener</h1>
+      <h1 className="title" onClick={handleReload}>
+        URL Shortener
+      </h1>
       <form className="form" onSubmit={onSubmit}>
         <input
           key="longURL"
@@ -70,13 +78,14 @@ function Form() {
         ></input>
 
         <br />
-        <label for="scrubber">Number of Characters: {numberCharacters}</label>
+        <label htmlFor="scrubber">
+          Number of Characters: {numberCharacters}
+        </label>
         <input
           type="range"
           min="5"
           max="20"
           step="1"
-          defaultValue="5"
           id="scrubber"
           list="markers"
           value={numberCharacters}
@@ -84,18 +93,20 @@ function Form() {
         ></input>
 
         <datalist id="markers">
-          <option value="0"></option>
-          <option value="25"></option>
-          <option value="50"></option>
-          <option value="75"></option>
-          <option value="100"></option>
+          <option value="1"></option>
+          <option value="5"></option>
+          <option value="9"></option>
+          <option value="13"></option>
+          <option value="17"></option>
+          <option value="20"></option>
         </datalist>
 
-        <input type="submit" className="submit_btn"></input>
+        <input type="submit" className="submit_btn" value="Shorten URL"></input>
       </form>
-      <h5 className="final_url">
-        Your URL is: http://localhost:5000/l/{formData.shortURL}
-      </h5>
+      <h3 className="final_url" onClick={copyUrl}>
+        Your URL is: &nbsp; {finalURL}
+        <img src="clipboard.svg" width="30px" alt="copy text"></img>
+      </h3>
     </>
   );
 }
