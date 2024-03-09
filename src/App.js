@@ -8,25 +8,10 @@ function Form() {
   const [formData, setFormData] = useState({
     shortURL: nanoid(5),
     longURL: "",
+    expireAfterSeconds: null,
   });
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      await fetch("/insert", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      setFinalURL("http://localhost:3000/l/" + formData.shortURL);
-      document.querySelector(".final_url").style.visibility = "visible";
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const handleReload = () => window.location.reload();
 
   const onChangeData = (e) => {
     setFormData({
@@ -48,9 +33,58 @@ function Form() {
     alert("URL Copied! ", finalURL);
     navigator.clipboard.writeText(finalURL);
   };
-  const handleReload = () => {
-    window.location.reload();
+
+  const SelectInput = () => {
+    // useEffect(() => {
+    //   console.log(formData.expireAfterSeconds);
+    // }, []);
+
+    return (
+      <>
+        <select
+          name="expireAfterSeconds"
+          onChange={onChangeData}
+          value={formData.expireAfterSeconds || ""}
+        >
+          <option value="null" default>
+            Never Expire
+          </option>
+          <option value="5">Expire After 5 Seconds</option>
+          <option value="60">Expire After 1 Minute</option>
+          <option value="600">Expire After 10 Minutes</option>
+          <option value="3600">Expire After 1 Hour</option>
+          <option value="86400">Expire After 1 Day</option>
+          <option value="604800">Expire After 1 Week</option>
+          <option value="2629800">Expire After 1 Month</option>
+        </select>
+      </>
+    );
   };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("/insert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error);
+      } else {
+        setFinalURL("http://localhost:3000/l/" + formData.shortURL);
+        document.querySelector(".final_url").style.visibility = "visible";
+      }
+    } catch (error) {
+      console.error("Error: ", error);
+      alert(error.message || "Server Error Occured!");
+    }
+  };
+
   return (
     <>
       <h1 className="title" onClick={handleReload}>
@@ -81,6 +115,7 @@ function Form() {
         <label htmlFor="scrubber">
           Number of Characters: {numberCharacters}
         </label>
+
         <input
           type="range"
           min="5"
@@ -92,14 +127,7 @@ function Form() {
           onChange={onScrub}
         ></input>
 
-        <datalist id="markers">
-          <option value="1"></option>
-          <option value="5"></option>
-          <option value="9"></option>
-          <option value="13"></option>
-          <option value="17"></option>
-          <option value="20"></option>
-        </datalist>
+        <SelectInput />
 
         <input type="submit" className="submit_btn" value="Shorten URL"></input>
       </form>
