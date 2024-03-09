@@ -49,7 +49,6 @@ function Form() {
           <option value="null" default>
             Never Expire
           </option>
-          <option value="5">Expire After 5 Seconds</option>
           <option value="60">Expire After 1 Minute</option>
           <option value="600">Expire After 10 Minutes</option>
           <option value="3600">Expire After 1 Hour</option>
@@ -85,6 +84,16 @@ function Form() {
     }
   };
 
+  function calculateTime() {
+    if (formData.expireAfterSeconds !== null)
+      return (
+        "Expires at " +
+        new Date(new Date().getTime() + formData.expireAfterSeconds * 1000)
+          .toString
+      );
+    else return "Never Expires";
+  }
+
   return (
     <>
       <h1 className="title" onClick={handleReload}>
@@ -99,6 +108,7 @@ function Form() {
           name="longURL"
           onChange={onChangeData}
           required
+          size="30"
         ></input>
 
         <input
@@ -109,6 +119,7 @@ function Form() {
           name="shortURL"
           onChange={onChangeData}
           required
+          size="20"
         ></input>
 
         <br />
@@ -132,8 +143,9 @@ function Form() {
         <input type="submit" className="submit_btn" value="Shorten URL"></input>
       </form>
       <h3 className="final_url" onClick={copyUrl}>
-        Your URL is: &nbsp; {finalURL}
+        Your URL is: &nbsp; {finalURL}.
         <img src="clipboard.svg" width="30px" alt="copy text"></img>
+        {calculateTime()}
       </h3>
     </>
   );
