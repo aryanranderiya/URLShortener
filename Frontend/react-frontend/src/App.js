@@ -35,10 +35,6 @@ function Form() {
   };
 
   const SelectInput = () => {
-    // useEffect(() => {
-    //   console.log(formData.expireAfterSeconds);
-    // }, []);
-
     return (
       <>
         <select
@@ -63,19 +59,25 @@ function Form() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/insert", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://urlshortener-3bu9011g3-aryanranderiya.vercel.app/insert",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error);
       } else {
-        setFinalURL("http://links.aryanranderiya.com/l/" + formData.shortURL);
+        setFinalURL(
+          "https://urlshortener-3bu9011g3-aryanranderiya.vercel.app/l/" +
+            formData.shortURL
+        );
         document.querySelector(".final_url").style.visibility = "visible";
       }
     } catch (error) {
