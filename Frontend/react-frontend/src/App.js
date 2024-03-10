@@ -60,7 +60,7 @@ function Form() {
     e.preventDefault();
     try {
       const response = await fetch(
-        "https://urlshortener-3bu9011g3-aryanranderiya.vercel.app/insert",
+        "https://urlshortener-api-cyan.vercel.app/insert",
         {
           method: "POST",
           headers: {
@@ -75,8 +75,7 @@ function Form() {
         throw new Error(errorData.error);
       } else {
         setFinalURL(
-          "https://urlshortener-3bu9011g3-aryanranderiya.vercel.app/l/" +
-            formData.shortURL
+          "https://urlshortener-api-cyan.vercel.app/l/" + formData.shortURL
         );
         document.querySelector(".final_url").style.visibility = "visible";
       }
