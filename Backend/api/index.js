@@ -44,7 +44,7 @@ app.post("/insert", async (req, res) => {
   }
 });
 
-app.get("/l/*", async (req, res) => {
+app.get("/l", async (req, res) => {
   const url = req.params[0];
   console.log("URL Parameter:", url);
   console.log("URL Parameter Type:", typeof url);
