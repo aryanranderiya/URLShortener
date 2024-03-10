@@ -6,7 +6,8 @@ require("dotenv").config();
 const { insertIntoDatabase, searchDatabase } = require("./database");
 
 const app = express();
-const PORT = process.env.PORT;
+// const PORT = process.env.PORT;
+const PORT = 3000;
 
 app.use(
   cors({
@@ -15,6 +16,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
 
 app.listen(PORT, (error) => {
