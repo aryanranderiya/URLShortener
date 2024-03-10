@@ -7,15 +7,15 @@ const { insertIntoDatabase, searchDatabase } = require("./database.js");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// app.use(cors());
 
-// app.use(
-//   cors({
-//     origin: ["urlshortener-9wyvc7k1v-aryanranderiya.vercel.app"],
-//     methods: ["POST", "GET"],
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: "https://links.aryanranderiya.com", // Update with your React app's domain
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -44,7 +44,7 @@ app.post("/insert", async (req, res) => {
   }
 });
 
-app.get("/l", async (req, res) => {
+app.get("/l/*", async (req, res) => {
   const url = req.params[0];
   console.log("URL Parameter:", url);
   console.log("URL Parameter Type:", typeof url);
