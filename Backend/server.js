@@ -10,7 +10,7 @@ const PORT = process.env.PORT;
 
 app.use(
   cors({
-    origin: ["https://urlshortener-lac.vercel.app"],
+    origin: ["urlshortener-lac.vercel.app"],
     methods: ["POST", "GET"],
     credentials: true,
   })
