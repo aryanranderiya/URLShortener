@@ -8,11 +8,4 @@ module.exports = function (app) {
       changeOrigin: true,
     })
   );
-  app.use(
-    "/insert",
-    createProxyMiddleware({
-      target: "https://urlshortener-api-cyan.vercel.app",
-      changeOrigin: true,
-    })
-  );
 };
