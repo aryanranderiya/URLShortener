@@ -1,7 +1,10 @@
 {
   "version": 2,
-  "rewrites": [{ "source": "/(.*)", "destination": "/api" }],
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/$1"
+    },
     {
       "src": "/l/(.*)",
       "dest": "https://urlshortener-api-cyan.vercel.app/l/$1"
