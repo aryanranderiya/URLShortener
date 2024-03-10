@@ -11,7 +11,7 @@ linksSchema.index({
   shortURL: "text",
 });
 
-const Link = mongoose.model("linksModel", linksSchema);
+const Link = mongoose.model("Links", linksSchema);
 
 const connectDatabase = async () => {
   const connectionString = process.env.MONGO_DB;
@@ -29,7 +29,6 @@ const insertIntoDatabase = async (
   expireAfterSeconds = null
 ) => {
   connectDatabase();
-  createIndex();
   const [currentTime, expiryTime] = await calculateTime(expireAfterSeconds);
 
   console.log("current time", currentTime);
@@ -44,6 +43,8 @@ const insertIntoDatabase = async (
     });
 
     await link.save();
+    
+    createIndex();
 
     console.log(`Successfully Inserted short URL "${shortURL}"!`);
   } catch (error) {
