@@ -1,9 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 require("dotenv").config();
 
-const { insertIntoDatabase, searchDatabase } = require("./database");
+const { insertIntoDatabase, searchDatabase } = require("../database");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
