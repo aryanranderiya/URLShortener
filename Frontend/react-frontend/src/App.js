@@ -59,16 +59,15 @@ function Form() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
-        "https://urlshortener-api-cyan.vercel.app/insert",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch("/insert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      console.log("response is", response);
 
       if (!response.ok) {
         const errorData = await response.json();
