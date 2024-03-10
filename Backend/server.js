@@ -8,7 +8,13 @@ const { insertIntoDatabase, searchDatabase } = require("./database");
 const app = express();
 const PORT = process.env.PORT;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://urlshortener-lac.vercel.app"],
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.listen(PORT, (error) => {
@@ -51,3 +57,8 @@ app.get("/l/*", async (req, res) => {
     res.redirect("https://aryanranderiya.com/404");
   }
 });
+
+app.get("/"),
+  (req, res) => {
+    res.send("Hello World!");
+  };
