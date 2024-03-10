@@ -1,14 +1,22 @@
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 require("dotenv").config();
 
 const { insertIntoDatabase, searchDatabase } = require("./database");
 
 const app = express();
-// const PORT = process.env.PORT;
-const PORT = 5000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+
+// app.use(
+//   cors({
+//     origin: ["urlshortener-9wyvc7k1v-aryanranderiya.vercel.app"],
+//     methods: ["POST", "GET"],
+//     credentials: true,
+//   })
+// );
 
 app.use(express.json());
 

@@ -75,7 +75,7 @@ function Form() {
         const errorData = await response.json();
         throw new Error(errorData.error);
       } else {
-        setFinalURL("http://localhost:3000/l/" + formData.shortURL);
+        setFinalURL("http://links.aryanranderiya.com/l/" + formData.shortURL);
         document.querySelector(".final_url").style.visibility = "visible";
       }
     } catch (error) {
@@ -88,8 +88,9 @@ function Form() {
     if (formData.expireAfterSeconds !== null)
       return (
         "Expires at " +
-        new Date(new Date().getTime() + formData.expireAfterSeconds * 1000)
-          .toString
+        new Date(
+          new Date().getTime() + formData.expireAfterSeconds * 1000
+        ).toString()
       );
     else return "Never Expires";
   }
@@ -143,7 +144,7 @@ function Form() {
         <input type="submit" className="submit_btn" value="Shorten URL"></input>
       </form>
       <h3 className="final_url" onClick={copyUrl}>
-        Your URL is: &nbsp; {finalURL}.
+        Your URL is: &nbsp; {finalURL}
         <img src="clipboard.svg" width="30px" alt="copy text"></img>
         {calculateTime()}
       </h3>
