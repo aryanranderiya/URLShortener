@@ -1,10 +1,4 @@
 {
   "version": 2,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api" },
-    {
-      "source": "/l/(.*)",
-      "destination": "https://urlshortener-api-cyan.vercel.app/l/$1"
-    }
-  ]
+  "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
 }
