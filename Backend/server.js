@@ -58,7 +58,6 @@ app.get("/l/*", async (req, res) => {
   }
 });
 
-app.get("/"),
-  (req, res) => {
-    res.send("Hello World!");
-  };
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
