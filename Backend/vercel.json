@@ -4,7 +4,7 @@
     { "source": "/(.*)", "destination": "/api" },
     {
       "source": "/l/(.*)",
-      "destination": "/api"
+      "destination": "https://urlshortener-api-cyan.vercel.app/l/$1"
     }
   ]
 }
