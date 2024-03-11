@@ -14,10 +14,13 @@ function Form() {
   const handleReload = () => window.location.reload();
 
   const onChangeData = (e) => {
+    if (e.target.name === "shortURL")
+      setNumberCharacters(e.target.value.length);
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    document.querySelector(".final_url").style.visibility = "hidden";
   };
 
   const onScrub = (e) => {
@@ -100,6 +103,7 @@ function Form() {
       <h1 className="title" onClick={handleReload}>
         URL Shortener
       </h1>
+
       <form className="form" onSubmit={onSubmit}>
         <input
           key="longURL"
@@ -124,10 +128,10 @@ function Form() {
         ></input>
 
         <br />
+
         <label htmlFor="scrubber">
           Number of Characters: {numberCharacters}
         </label>
-
         <input
           type="range"
           min="5"
@@ -143,13 +147,14 @@ function Form() {
 
         <input type="submit" className="submit_btn" value="Shorten URL"></input>
       </form>
+
       <h3 className="final_url" onClick={copyUrl}>
         Your URL is: &nbsp; {finalURL}
         <img src="clipboard.svg" width="30px" alt="copy text"></img>
         {calculateTime()}
       </h3>
       <h4 className="subtitle">
-        Made with 💙 by{" "}
+        Made with 💙 by&nbsp;
         <a href="https://aryanranderiya.com" className="subtitle_color">
           Aryan Randeriya
         </a>
