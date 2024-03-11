@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const linksSchema = new mongoose.Schema({
   shortURL: { type: String, required: true, unique: true, index: true },
@@ -43,7 +46,7 @@ const insertIntoDatabase = async (
     });
 
     await link.save();
-    
+
     createIndex();
 
     console.log(`Successfully Inserted short URL "${shortURL}"!`);

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 const { insertIntoDatabase, searchDatabase } = require("./database.js");
@@ -7,21 +8,50 @@ const { insertIntoDatabase, searchDatabase } = require("./database.js");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// app.use(cors());
+app.use(cors());
 
-app.use(
-  cors({
-    origin: "https://links.aryanranderiya.com", // Update with your React app's domain
-    methods: ["POST", "GET"],
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "https://links.aryanranderiya.com", // Update with your React app's domain
+//     methods: ["POST", "GET"],
+//     credentials: true,
+//   })
+// );
 
 app.use(express.json());
+
+app.use(
+  express.static(path.join(__dirname, "../../Frontend/react-frontend/build"))
+);
+
+app.get("/", (req, res) => {
+  res.sendFile(
+    path.join(
+      __dirname,
+      "../../Frontend/react-frontend/build/static/index.html"
+    )
+  );
+});
 
 app.listen(PORT, (error) => {
   if (error) console.log("Server Could not Start!" + error);
   else console.log("Server successfully started! Listening on port " + PORT);
+});
+
+app.get("/l/*", async (req, res) => {
+  const url = req.params[0];
+  console.log("URL Parameter:", url);
+  console.log("URL Parameter Type:", typeof url);
+
+  if (url && url !== "/") {
+    const longURL = await searchDatabase(url);
+    console.log(longURL);
+
+    if (longURL !== null) res.redirect(longURL);
+    else res.redirect("https://aryanranderiya.com/404");
+  } else {
+    res.redirect("https://aryanranderiya.com/404");
+  }
 });
 
 app.post("/insert", async (req, res) => {
@@ -42,26 +72,6 @@ app.post("/insert", async (req, res) => {
       .status(409)
       .json({ error: "Short Link Already Exists! Please try again." });
   }
-});
-
-app.get("/l/*", async (req, res) => {
-  const url = req.params[0];
-  console.log("URL Parameter:", url);
-  console.log("URL Parameter Type:", typeof url);
-
-  if (url && url !== "/") {
-    const longURL = await searchDatabase(url);
-    console.log(longURL);
-
-    if (longURL !== null) res.redirect(longURL);
-    else res.redirect("https://aryanranderiya.com/404");
-  } else {
-    res.redirect("https://aryanranderiya.com/404");
-  }
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello World!");
 });
 
 module.exports = app;
