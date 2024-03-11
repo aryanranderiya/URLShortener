@@ -77,7 +77,7 @@ function Form() {
         throw new Error(errorData.error);
       } else {
         setFinalURL(
-          "https://urlshortener-api-cyan.vercel.app/l/" + formData.shortURL
+          "https://links.aryanranderiya.com/l/" + formData.shortURL
         );
         document.querySelector(".final_url").style.visibility = "visible";
       }
