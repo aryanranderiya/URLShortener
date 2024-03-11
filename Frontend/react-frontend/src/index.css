@@ -136,3 +136,12 @@ option {
 label {
   font-size: 0.8em;
 }
+
+.subtitle {
+  text-align: center;
+  font-weight: normal;
+}
+
+.subtitle_color {
+  color: #00bbff;
+}

@@ -148,6 +148,12 @@ function Form() {
         <img src="clipboard.svg" width="30px" alt="copy text"></img>
         {calculateTime()}
       </h3>
+      <h4 className="subtitle">
+        Made with 💙 by{" "}
+        <a href="https://aryanranderiya.com" className="subtitle_color">
+          Aryan Randeriya
+        </a>
+      </h4>
     </>
   );
 }
