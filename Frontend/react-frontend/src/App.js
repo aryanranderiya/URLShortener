@@ -11,8 +11,6 @@ function Form() {
     expireAfterSeconds: null,
   });
 
-  const handleReload = () => window.location.reload();
-
   const onChangeData = (e) => {
     if (e.target.name === "shortURL")
       setNumberCharacters(e.target.value.length);
@@ -76,9 +74,7 @@ function Form() {
         const errorData = await response.json();
         throw new Error(errorData.error);
       } else {
-        setFinalURL(
-          "https://links.aryanranderiya.com/l/" + formData.shortURL
-        );
+        setFinalURL("https://links.aryanranderiya.com/l/" + formData.shortURL);
         document.querySelector(".final_url").style.visibility = "visible";
       }
     } catch (error) {
@@ -100,9 +96,9 @@ function Form() {
 
   return (
     <>
-      <h1 className="title" onClick={handleReload}>
-        URL Shortener
-      </h1>
+      <a href="https://links.aryanranderiya.com" className="bannerimage">
+        <img src="banner.png" alt="Project Banner" width="35%"></img>
+      </a>
 
       <form className="form" onSubmit={onSubmit}>
         <input
