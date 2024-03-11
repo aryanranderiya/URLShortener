@@ -38,31 +38,43 @@ Before you begin, ensure you have met the following requirements:
 
 1.  **Clone the repository:**
 
-    ````
-     git clone https://github.com/aryanranderiya/URLShortener.git
-     cd URLShortener
-     ```
-    <br>
+    ```
+    git clone https://github.com/aryanranderiya/URLShortener.git
+    ```
 
-    ````
+    ```
+    cd URLShortener
+    ```
+
+    <br>
 
 2.  **Install Dependencies**
 
     > Tip: Create 2 Terminals for ease of use
 
-        ```
-        cd Backend
-        npm i
-        ```
+- Install Dependencies in Backend
 
-        ```
-        cd Frontend/react-frontend
-        npm i
-        ```
+  ```
+  cd Backend
+  ```
+
+  ```
+  npm i
+  ```
+
+- Install Dependencies in Frontend
+
+  ```
+  cd Frontend/react-frontend
+  ```
+
+  ```
+  npm i
+  ```
 
     <br>
 
-3.  **Update Environment Variables**
+1.  **Update Environment Variables**
     - Rename '.env.template' to '.env' <br>
     - Add the link to your MongoDB connection string and your desired port.
     ```
@@ -78,6 +90,9 @@ Before you begin, ensure you have met the following requirements:
 
     ```
     cd api
+    ```
+
+    ```
     node index
     ```
 
@@ -85,10 +100,13 @@ Before you begin, ensure you have met the following requirements:
 
     > After Navigating to _URLShortener/Frontend/react-frontend_ using _cd Frontend/react-frontend'_
 
-        ```
-        cd src
-        npm start
-        ```
+    ```
+    cd src
+    ```
+
+    ```
+    npm start
+    ```
 
     <br>
 
@@ -100,6 +118,5 @@ Before you begin, ensure you have met the following requirements:
   ```
 - No need to Deploy the react frontend as the Backend will automatically serve the frontend from src/build
 - Replace all hardcoded URL's from the code
-
 
 ### Happy coding!
