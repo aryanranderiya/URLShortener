@@ -1,6 +1,7 @@
 import "./App.css";
 import React, { useState } from "react";
 import { nanoid } from "nanoid";
+import { Analytics } from "@vercel/analytics/react";
 
 function Form() {
   const [numberCharacters, setNumberCharacters] = useState(5);
@@ -155,6 +156,8 @@ function Form() {
           Aryan Randeriya
         </a>
       </h4>
+
+      <Analytics />
     </>
   );
 }
