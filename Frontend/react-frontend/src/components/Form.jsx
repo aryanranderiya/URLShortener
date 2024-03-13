@@ -1,29 +1,53 @@
-import "./App.css";
 import React, { useState } from "react";
 import { nanoid } from "nanoid";
-import { Analytics } from "@vercel/analytics/react";
+import {
+  Input,
+  Slider,
+  Select,
+  SelectItem,
+  Spacer,
+  Button,
+} from "@nextui-org/react";
 
-function Form() {
+export default function Form() {
   const [numberCharacters, setNumberCharacters] = useState(5); // No. of Characters of the Short text
+  const [longURL, setLongURL] = useState("");
+  const [shortURL, setShortURL] = useState(nanoid(numberCharacters));
   const [finalURL, setFinalURL] = useState(null); // Final generated URL
+  const [expireAfterSeconds, setExpireAfterSeconds] = useState("");
 
   const [formData, setFormData] = useState({
     // Form Data that is to be passed to insert into database
-    shortURL: nanoid(5),
-    longURL: "",
-    expireAfterSeconds: null,
+    shortURL: shortURL,
+    longURL: longURL,
+    expireAfterSeconds: expireAfterSeconds,
   });
 
-  //
-  const onChangeData = (e) => {
+  const onChangeData_ShortURL = (e) => {
+    // Set the Short URL based on the users input
+    setShortURL(e.target.value);
+
     // If the short URL is being changed then set state of no. of characters
-    if (e.target.name === "shortURL")
-      setNumberCharacters(e.target.value.length);
+    setNumberCharacters(e.target.value.length);
 
     // Set the values for the form data
     setFormData({
+      shortURL: e.target.value,
       ...formData,
-      [e.target.name]: e.target.value,
+    });
+
+    // If there is any updation of any inputs then hide the final url text
+    document.querySelector(".final_url").style.visibility = "hidden";
+  };
+
+  const onChangeData_LongURL = (e) => {
+    // Set the Short URL based on the users input
+    setLongURL(e.target.value);
+
+    // Set the values for the form data
+    setFormData({
+      longURL: e.target.value,
+      ...formData,
     });
 
     // If there is any updation of any inputs then hide the final url text
@@ -33,7 +57,7 @@ function Form() {
   // onChange of Scrubber (input type=range)
   const onScrub = (e) => {
     // Update state of number of characters
-    setNumberCharacters(e.target.value);
+    setNumberCharacters(e);
 
     // Update the form's data with a generated shortURL based on the number of characters
     setFormData({
@@ -51,27 +75,41 @@ function Form() {
     navigator.clipboard.writeText(finalURL);
   };
 
+  const handleSelectionChange = (e) => {
+    setExpireAfterSeconds(e.target.value);
+  };
+
   // Drop Down Menu for Expiration Time
   const SelectInput = () => {
+    // Values are in seconds
+    const options = [
+      { value: "test", label: "Never Expire" },
+      { value: "60", label: "Expire After 1 Minute" },
+      { value: "600", label: "Expire After 10 Minutes" },
+      { value: "3600", label: "Expire After 1 Hour" },
+      { value: "86400", label: "Expire After 1 Day" },
+      { value: "604800", label: "Expire After 1 Week" },
+      { value: "2629800", label: "Expire After 1 Month" },
+    ];
     return (
       <>
-        <select
+        <Select
+          label="Expires After"
+          placeholder="Select an Expiration Time"
+          // className="w-full"
+          variant="faded"
           name="expireAfterSeconds"
-          onChange={onChangeData}
-          value={formData.expireAfterSeconds || ""}
+          onChange={handleSelectionChange}
+          selectedKeys={[expireAfterSeconds]}
+          defaultSelectedKeys={["test"]}
         >
-          <option value="null" default>
-            Never Expire
-          </option>
-
-          {/* Values are in seconds */}
-          <option value="60">Expire After 1 Minute</option>
-          <option value="600">Expire After 10 Minutes</option>
-          <option value="3600">Expire After 1 Hour</option>
-          <option value="86400">Expire After 1 Day</option>
-          <option value="604800">Expire After 1 Week</option>
-          <option value="2629800">Expire After 1 Month</option>
-        </select>
+          {options.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
+        </Select>
+        <Spacer />
       </>
     );
   };
@@ -123,48 +161,53 @@ function Form() {
   // Main Return of the "Form"
   return (
     <>
-      <form className="form" onSubmit={onSubmit}>
-        <input
+      <form className="form flex flex-col gap-4" onSubmit={onSubmit}>
+        <Input
           key="longURL"
           type="url"
-          placeholder="Enter long URL to shorten:"
-          value={formData.longURL}
-          name="longURL"
-          onChange={onChangeData}
+          label="Long URL"
+          value={longURL}
+          onChange={onChangeData_LongURL}
+          variant="faded"
           required
-          size="30"
-        ></input>
+          className="text-black w-full	"
+          size="md"
+        />
 
-        <input
+        <Input
           key="shortURL"
           type="text"
-          placeholder="Enter short URL:"
-          value={formData.shortURL}
-          name="shortURL"
-          onChange={onChangeData}
+          label="Short URL"
+          value={shortURL}
+          onChange={onChangeData_ShortURL}
+          variant="faded"
           required
-          size="20"
-        ></input>
+          className="text-black"
+          size="md"
+        />
 
-        <br />
-
-        <label htmlFor="scrubber">
-          Number of Characters: {numberCharacters}
-        </label>
-        <input
-          type="range"
-          min="5"
-          max="20"
-          step="1"
-          id="scrubber"
-          list="markers"
+        <Slider
+          label={"Number of Characters"}
+          step={1}
+          maxValue={20}
+          minValue={5}
+          defaultValue={numberCharacters}
+          // className="max-w-md"
           value={numberCharacters}
           onChange={onScrub}
-        ></input>
+          size="md"
+        />
 
         <SelectInput />
 
-        <input type="submit" className="submit_btn" value="Shorten URL"></input>
+        <Input
+          key="shortenURL"
+          type="submit"
+          value="Shorten URL"
+          color="primary"
+          variant="faded"
+          className="text-black"
+        />
       </form>
 
       <h3 className="final_url" onClick={copyUrl}>
@@ -175,48 +218,3 @@ function Form() {
     </>
   );
 }
-
-function App() {
-  // Subtext of "Made By" & "View on Github"
-  const BottomText = () => {
-    return (
-      <>
-        <h4 className="subtitle">
-          Made with 💙 by&nbsp;
-          <a href="https://aryanranderiya.com" className="subtitle_color">
-            Aryan Randeriya
-          </a>
-          <br></br>
-          <br></br>
-          <a
-            href="https://github.com/aryanranderiya/URLShortener"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <i class="devicon-github-original"></i> View on Github
-          </a>
-        </h4>
-      </>
-    );
-  };
-
-  // Main Image of Website. Onclick will re-navigate to the website
-  const TitleImage = () => {
-    return (
-      <a href="https://links.aryanranderiya.com" className="bannerimage">
-        <img src="banner.png" alt="Project Banner" width="35%"></img>
-      </a>
-    );
-  };
-
-  return (
-    <>
-      <Analytics /> {/* Vercel Analytics */}
-      <TitleImage />
-      <Form />
-      <BottomText />
-    </>
-  );
-}
-
-export default App;
