@@ -38,18 +38,18 @@ export default function ModalComponent({ flag, finalURL, expireAfterSeconds }) {
     alert("Copied to Clipboard!");
   };
 
-  // Attach event listener to modal close event
-  useEffect(() => {
-    const handleCloseModal = () => {
-      window.location.reload();
-    };
+  // // Attach event listener to modal close event
+  // useEffect(() => {
+  //   const handleCloseModal = () => {
+  //     window.location.reload();
+  //   };
 
-    // Execute the reloadPage function when the modal is closed
-    if (!isOpen) handleCloseModal();
+  //   // Execute the reloadPage function when the modal is closed
+  //   if (!isOpen) handleCloseModal();
 
-    // Clean up event listener
-    return () => window.removeEventListener("beforeunload", handleCloseModal);
-  }, [isOpen]);
+  //   // Clean up event listener
+  //   return () => window.removeEventListener("beforeunload", handleCloseModal);
+  // }, [isOpen]);
 
   return (
     <>
