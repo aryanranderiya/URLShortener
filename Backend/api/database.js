@@ -115,7 +115,7 @@ async function calculateTime(expireAfterSeconds) {
   const currentTime = new Date(); // Create a new Date and assign to currentTime
 
   // Only if the user has selected anything other than "Never Expire"
-  if (expireAfterSeconds !== null) {
+  if (expireAfterSeconds !== "null") {
     // Type cast the string to Integer
     expireAfterSeconds = parseInt(expireAfterSeconds);
 

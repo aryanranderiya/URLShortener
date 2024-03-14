@@ -9,6 +9,7 @@ import {
   Button,
   Tooltip,
 } from "@nextui-org/react";
+import ModalComponent from "./Modal";
 
 export default function Form() {
   const [numberCharacters, setNumberCharacters] = useState(5); // No. of Characters of the Short text
@@ -17,30 +18,33 @@ export default function Form() {
   const [finalURL, setFinalURL] = useState(null); // Final generated URL
   const [expireAfterSeconds, setExpireAfterSeconds] = useState("null");
   const [isValidURL, setValidURL] = useState(true);
+  const [openModel, setOpenModel] = useState(false);
 
+  // Form Data that is to be passed to insert into database
   const [formData, setFormData] = useState({
-    // Form Data that is to be passed to insert into database
     shortURL: shortURL,
     longURL: longURL,
     expireAfterSeconds: expireAfterSeconds,
   });
 
+  // Set the Short URL based on the users input
   const onChangeData_ShortURL = (e) => {
-    // Set the Short URL based on the users input
-    setShortURL(e.target.value);
-
-    // If the short URL is being changed then set state of no. of characters
-    setNumberCharacters(e.target.value.length);
-
-    // Set the values for the form data
-    setFormData({
-      shortURL: e.target.value,
-      ...formData,
-    });
-
-    // If there is any updation of any inputs then hide the final url text
-    document.querySelector(".final_url").classList.add("invisible");
+    changeShortURL(e.target.value);
   };
+
+  // onChange of Scrubber (input type=range)
+  const onScrub = (e) => {
+    if (e !== numberCharacters) changeShortURL(nanoid(e));
+  };
+
+  function changeShortURL(value) {
+    setShortURL(value);
+    setNumberCharacters(value.length);
+    setFormData({
+      ...formData,
+      shortURL: value,
+    });
+  }
 
   const onChangeData_LongURL = (e) => {
     setLongURL(e.target.value);
@@ -49,48 +53,21 @@ export default function Form() {
 
     setValidURL(urlRegex.test(e.target.value));
 
-    console.log(isValidURL);
-
     if (isValidURL) {
       // Set the values for the form data
       setFormData({
-        longURL: e.target.value,
         ...formData,
+        longURL: e.target.value,
       });
-    } else {
     }
-
-    // If there is any updation of any inputs then hide the final url text
-    document.querySelector(".final_url").classList.add("invisible");
-  };
-
-  // onChange of Scrubber (input type=range)
-  const onScrub = (e) => {
-    // // setFormData({
-    // //   ...formData,
-    // //   shortURL: nanoid(numberCharacters),
-    // // });
-
-    if (e !== numberCharacters) {
-      // Update state of number of characters
-      setNumberCharacters(e);
-
-      // Update the form's data with a generated shortURL based on the number of characters
-      setShortURL(nanoid(e));
-
-      // If there is any updation of any inputs then hide the final url text
-      document.querySelector(".final_url").classList.add("invisible");
-    }
-  };
-
-  // Copy the generated URL to the user's clipboard
-  const copyUrl = () => {
-    alert("URL Copied! ", finalURL);
-    navigator.clipboard.writeText(finalURL);
   };
 
   const handleSelectionChange = (e) => {
     setExpireAfterSeconds(e.target.value);
+    setFormData({
+      ...formData,
+      expireAfterSeconds: e.target.value,
+    });
   };
 
   // Drop Down Menu for Expiration Time
@@ -144,10 +121,10 @@ export default function Form() {
         const errorData = await response.json();
         throw new Error(errorData.error);
       } else {
+        setOpenModel(true);
         // If response = ok then set the final url state
         setFinalURL("https://links.aryanranderiya.com/l/" + formData.shortURL);
         // Set the final url text visible for the user to copy
-        document.querySelector(".final_url").classList.remove("invisible");
       }
     } catch (error) {
       console.error("Error: ", error);
@@ -155,24 +132,18 @@ export default function Form() {
     }
   };
 
-  // Calculate the Expiration Time based on user's expiry drop down selection
-  // This is to display expiration time to the user in "final_url" class
-  function calculateTime() {
-    if (formData.expireAfterSeconds !== null)
-      // Only calculate if expiry is not null
-      return (
-        "Expires at " +
-        new Date(
-          new Date().getTime() + formData.expireAfterSeconds * 1000 // 1000 to convert from milliseconds to seconds
-        ).toString() // toString converts the date from milliseconds to a readable format
-      );
-    else return "Never Expires";
-  }
+  React.useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   // Main Return of the "Form"
   return (
     <>
-      <form className="form flex flex-col gap-4" onSubmit={onSubmit}>
+      <form
+        className="form flex flex-col gap-4"
+        onSubmit={onSubmit}
+        style={{ width: "30vw" }}
+      >
         <Tooltip
           content="This is the URL you want to shorten"
           offset={20}
@@ -188,17 +159,19 @@ export default function Form() {
             onChange={onChangeData_LongURL}
             variant="faded"
             required
-            className="text-black w-full	"
+            className="w-full"
             size="md"
             color={!isValidURL ? "danger" : ""}
             errorMessage={!isValidURL && "Please enter a valid URL"}
+            isClearable
+            onClear={() => setLongURL("")}
           />
         </Tooltip>
 
         <Tooltip
           content={
             <>
-              Shortened:
+              Shortened would be:
               <b>links.aryanranderiya.com/l/{shortURL}</b>
             </>
           }
@@ -215,41 +188,48 @@ export default function Form() {
             onChange={onChangeData_ShortURL}
             variant="faded"
             required
-            className="text-black"
             size="md"
           />
         </Tooltip>
 
-        <Slider
-          label={"Number of Characters"}
-          maxValue={20}
-          minValue={5}
-          defaultValue={5}
-          value={numberCharacters}
-          onChange={onScrub}
-          size="md"
-          showTooltip
-        />
+        <Tooltip
+          content="Set the Number of Characters in the Short Link by dragging the slider"
+          offset={20}
+          placement="right-end"
+          showArrow
+          color="default"
+        >
+          <Slider
+            label={"Number of Characters"}
+            maxValue={20}
+            minValue={5}
+            defaultValue={5}
+            value={numberCharacters}
+            onChange={onScrub}
+            size="md"
+            showTooltip
+          />
+        </Tooltip>
 
         <SelectInput />
 
-        <Input
-          key="shortenURL"
+        <input
           type="submit"
-          value="Shorten URL"
-          color="primary"
-          variant="faded"
-          className="text-black"
-        />
-
-        <input type="submit" value={"Shorten URL"}></input>
+          value={"Shorten URL"}
+          className="p-3"
+          style={{
+            backgroundColor: "#00bbff",
+            borderRadius: "10px",
+            cursor: "pointer",
+          }}
+        ></input>
       </form>
 
-      <h3 className="final_url invisible" onClick={copyUrl}>
-        Your URL is: &nbsp; {finalURL}
-        <img src="clipboard.svg" width="30px" alt="copy text"></img>
-        {calculateTime()}
-      </h3>
+      <ModalComponent
+        flag={openModel}
+        finalURL={finalURL}
+        expireAfterSeconds={expireAfterSeconds}
+      />
     </>
   );
 }
