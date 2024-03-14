@@ -2,6 +2,8 @@
 
 - Website that can convert any long link and generate a shorter link that redirects to it
 
+![](https://github.com/aryanranderiya/URLShortener/assets/64796509/82c2d02c-e34e-441b-9032-f0b5a0b3c491)
+
 ### [Try Here: links.aryanranderiya.com](https://links.aryanranderiya.com)
 
 ## Features
