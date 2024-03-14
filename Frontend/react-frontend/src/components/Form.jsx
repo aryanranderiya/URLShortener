@@ -106,8 +106,6 @@ export default function Form() {
   const onSubmit = async (e) => {
     e.preventDefault(); // Prevent the default behaviour of page reload
 
-    setOpenModel(false);
-
     if (shortURL === "") changeShortURL(nanoid(5));
 
     if (formData.longURL !== "")
