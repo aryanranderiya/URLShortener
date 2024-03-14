@@ -16,6 +16,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+
+* {
+  font-family: Helvetica;
+}
+
 /* 
 #root {
   height: 100vh;
@@ -52,16 +58,6 @@ input {
   font-size: 1em;
 }
 
-.submit_btn {
-  color: white;
-  background-color: #00bbff;
-  cursor: pointer;
-  font-size: 1em;
-  margin-top: 1%;
-  padding: 0.8em;
-  width: 25ch;
-  font-weight: bold;
-}
 
 .final_url {
   gap: 1%;

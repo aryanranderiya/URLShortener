@@ -7,6 +7,7 @@ import {
   SelectItem,
   Spacer,
   Button,
+  Tooltip,
 } from "@nextui-org/react";
 
 export default function Form() {
@@ -14,7 +15,8 @@ export default function Form() {
   const [longURL, setLongURL] = useState("");
   const [shortURL, setShortURL] = useState(nanoid(numberCharacters));
   const [finalURL, setFinalURL] = useState(null); // Final generated URL
-  const [expireAfterSeconds, setExpireAfterSeconds] = useState("");
+  const [expireAfterSeconds, setExpireAfterSeconds] = useState("null");
+  const [isValidURL, setValidURL] = useState(true);
 
   const [formData, setFormData] = useState({
     // Form Data that is to be passed to insert into database
@@ -37,36 +39,48 @@ export default function Form() {
     });
 
     // If there is any updation of any inputs then hide the final url text
-    document.querySelector(".final_url").style.visibility = "hidden";
+    document.querySelector(".final_url").classList.add("invisible");
   };
 
   const onChangeData_LongURL = (e) => {
-    // Set the Short URL based on the users input
     setLongURL(e.target.value);
 
-    // Set the values for the form data
-    setFormData({
-      longURL: e.target.value,
-      ...formData,
-    });
+    const urlRegex = /^(ftp|http|https):\/\/[^ "]+$/;
+
+    setValidURL(urlRegex.test(e.target.value));
+
+    console.log(isValidURL);
+
+    if (isValidURL) {
+      // Set the values for the form data
+      setFormData({
+        longURL: e.target.value,
+        ...formData,
+      });
+    } else {
+    }
 
     // If there is any updation of any inputs then hide the final url text
-    document.querySelector(".final_url").style.visibility = "hidden";
+    document.querySelector(".final_url").classList.add("invisible");
   };
 
   // onChange of Scrubber (input type=range)
   const onScrub = (e) => {
-    // Update state of number of characters
-    setNumberCharacters(e);
+    // // setFormData({
+    // //   ...formData,
+    // //   shortURL: nanoid(numberCharacters),
+    // // });
 
-    // Update the form's data with a generated shortURL based on the number of characters
-    setFormData({
-      ...formData,
-      shortURL: nanoid(numberCharacters),
-    });
+    if (e !== numberCharacters) {
+      // Update state of number of characters
+      setNumberCharacters(e);
 
-    // If there is any updation of any inputs then hide the final url text
-    document.querySelector(".final_url").style.visibility = "hidden";
+      // Update the form's data with a generated shortURL based on the number of characters
+      setShortURL(nanoid(e));
+
+      // If there is any updation of any inputs then hide the final url text
+      document.querySelector(".final_url").classList.add("invisible");
+    }
   };
 
   // Copy the generated URL to the user's clipboard
@@ -83,7 +97,7 @@ export default function Form() {
   const SelectInput = () => {
     // Values are in seconds
     const options = [
-      { value: "test", label: "Never Expire" },
+      { value: "null", label: "Never Expire" },
       { value: "60", label: "Expire After 1 Minute" },
       { value: "600", label: "Expire After 10 Minutes" },
       { value: "3600", label: "Expire After 1 Hour" },
@@ -96,12 +110,10 @@ export default function Form() {
         <Select
           label="Expires After"
           placeholder="Select an Expiration Time"
-          // className="w-full"
           variant="faded"
           name="expireAfterSeconds"
           onChange={handleSelectionChange}
-          selectedKeys={[expireAfterSeconds]}
-          defaultSelectedKeys={["test"]}
+          selectedKeys={expireAfterSeconds ? [expireAfterSeconds] : ["null"]}
         >
           {options.map((option) => (
             <SelectItem key={option.value} value={option.value}>
@@ -109,7 +121,6 @@ export default function Form() {
             </SelectItem>
           ))}
         </Select>
-        <Spacer />
       </>
     );
   };
@@ -136,7 +147,7 @@ export default function Form() {
         // If response = ok then set the final url state
         setFinalURL("https://links.aryanranderiya.com/l/" + formData.shortURL);
         // Set the final url text visible for the user to copy
-        document.querySelector(".final_url").style.visibility = "visible";
+        document.querySelector(".final_url").classList.remove("invisible");
       }
     } catch (error) {
       console.error("Error: ", error);
@@ -162,40 +173,62 @@ export default function Form() {
   return (
     <>
       <form className="form flex flex-col gap-4" onSubmit={onSubmit}>
-        <Input
-          key="longURL"
-          type="url"
-          label="Long URL"
-          value={longURL}
-          onChange={onChangeData_LongURL}
-          variant="faded"
-          required
-          className="text-black w-full	"
-          size="md"
-        />
+        <Tooltip
+          content="This is the URL you want to shorten"
+          offset={20}
+          placement="right-end"
+          showArrow
+          color="primary"
+        >
+          <Input
+            key="longURL"
+            type="url"
+            label="Long URL"
+            value={longURL}
+            onChange={onChangeData_LongURL}
+            variant="faded"
+            required
+            className="text-black w-full	"
+            size="md"
+            color={!isValidURL ? "danger" : ""}
+            errorMessage={!isValidURL && "Please enter a valid URL"}
+          />
+        </Tooltip>
 
-        <Input
-          key="shortURL"
-          type="text"
-          label="Short URL"
-          value={shortURL}
-          onChange={onChangeData_ShortURL}
-          variant="faded"
-          required
-          className="text-black"
-          size="md"
-        />
+        <Tooltip
+          content={
+            <>
+              Shortened:
+              <b>links.aryanranderiya.com/l/{shortURL}</b>
+            </>
+          }
+          offset={20}
+          placement="right-end"
+          showArrow
+          color="default"
+        >
+          <Input
+            key="shortURL"
+            type="text"
+            label="Short URL"
+            value={shortURL}
+            onChange={onChangeData_ShortURL}
+            variant="faded"
+            required
+            className="text-black"
+            size="md"
+          />
+        </Tooltip>
 
         <Slider
           label={"Number of Characters"}
-          step={1}
           maxValue={20}
           minValue={5}
-          defaultValue={numberCharacters}
-          // className="max-w-md"
+          defaultValue={5}
           value={numberCharacters}
           onChange={onScrub}
           size="md"
+          showTooltip
         />
 
         <SelectInput />
@@ -208,9 +241,11 @@ export default function Form() {
           variant="faded"
           className="text-black"
         />
+
+        <input type="submit" value={"Shorten URL"}></input>
       </form>
 
-      <h3 className="final_url" onClick={copyUrl}>
+      <h3 className="final_url invisible" onClick={copyUrl}>
         Your URL is: &nbsp; {finalURL}
         <img src="clipboard.svg" width="30px" alt="copy text"></img>
         {calculateTime()}
