@@ -106,29 +106,37 @@ export default function Form() {
   const onSubmit = async (e) => {
     e.preventDefault(); // Prevent the default behaviour of page reload
 
-    try {
-      // Perform POST to "/insert" for the API to capture it
-      const response = await fetch("/insert", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData), // Convert the formData to json strings
-      });
+    if (shortURL === "") changeShortURL(nanoid(5));
 
-      if (!response.ok) {
-        // If the response is not Okay then throw a new error to propagate to the catch
-        const errorData = await response.json();
-        throw new Error(errorData.error);
-      } else {
-        setOpenModel(true);
-        // If response = ok then set the final url state
-        setFinalURL("https://links.aryanranderiya.com/l/" + formData.shortURL);
-        // Set the final url text visible for the user to copy
+    if (formData.longURL !== "")
+      try {
+        // Perform POST to "/insert" for the API to capture it
+        const response = await fetch("/insert", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData), // Convert the formData to json strings
+        });
+
+        if (!response.ok) {
+          // If the response is not Okay then throw a new error to propagate to the catch
+          const errorData = await response.json();
+          throw new Error(errorData.error);
+        } else {
+          setOpenModel(true);
+          // If response = ok then set the final url state
+          setFinalURL(
+            "https://links.aryanranderiya.com/l/" + formData.shortURL
+          );
+          // Set the final url text visible for the user to copy
+        }
+      } catch (error) {
+        console.error("Error: ", error);
+        alert(error.message || "Server Error Occured!");
       }
-    } catch (error) {
-      console.error("Error: ", error);
-      alert(error.message || "Server Error Occured!");
+    else {
+      setValidURL(false);
     }
   };
 
@@ -164,7 +172,10 @@ export default function Form() {
             color={!isValidURL ? "danger" : ""}
             errorMessage={!isValidURL && "Please enter a valid URL"}
             isClearable
-            onClear={() => setLongURL("")}
+            onClear={() => {
+              setLongURL("");
+              setValidURL(false);
+            }}
           />
         </Tooltip>
 
