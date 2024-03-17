@@ -5,7 +5,6 @@ import {
   Slider,
   Select,
   SelectItem,
-  Spacer,
   Button,
   Tooltip,
 } from "@nextui-org/react";
@@ -19,6 +18,7 @@ export default function Form() {
   const [expireAfterSeconds, setExpireAfterSeconds] = useState("null");
   const [isValidURL, setValidURL] = useState(true);
   const [openModel, setOpenModel] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
 
   // Form Data that is to be passed to insert into database
   const [formData, setFormData] = useState({
@@ -112,6 +112,8 @@ export default function Form() {
 
     if (formData.longURL !== "")
       try {
+        setisLoading(true);
+
         // Perform POST to "/insert" for the API to capture it
         const response = await fetch("/insert", {
           method: "POST",
@@ -126,6 +128,7 @@ export default function Form() {
           const errorData = await response.json();
           throw new Error(errorData.error);
         } else {
+          setisLoading(false);
           setOpenModel(true);
           // If response = ok then set the final url state
           setFinalURL(
@@ -142,9 +145,9 @@ export default function Form() {
     }
   };
 
-  React.useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+  // React.useEffect(() => {
+  //   console.log(formData);
+  // }, [formData]);
 
   // Main Return of the "Form"
   return (
@@ -180,7 +183,6 @@ export default function Form() {
             }}
           />
         </Tooltip>
-
         <Tooltip
           content={
             <>
@@ -204,7 +206,6 @@ export default function Form() {
             size="md"
           />
         </Tooltip>
-
         <Tooltip
           content="Set the Number of Characters in the Short Link by dragging the slider"
           offset={20}
@@ -223,19 +224,11 @@ export default function Form() {
             showTooltip
           />
         </Tooltip>
-
         <SelectInput />
 
-        <input
-          type="submit"
-          value={"Shorten URL"}
-          className="p-3"
-          style={{
-            backgroundColor: "#00bbff",
-            borderRadius: "10px",
-            cursor: "pointer",
-          }}
-        ></input>
+        <Button color="primary" type="submit" isLoading={isLoading}>
+          Shorten URL
+        </Button>
       </form>
 
       <ModalComponent

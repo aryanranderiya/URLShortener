@@ -11,7 +11,7 @@ import {
 } from "@nextui-org/react";
 
 export default function ModalComponent({ flag, finalURL, expireAfterSeconds }) {
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   // Calculate the Expiration Time based on user's expiry drop down selection
   // This is to display expiration time to the user in the Modal
@@ -37,19 +37,6 @@ export default function ModalComponent({ flag, finalURL, expireAfterSeconds }) {
     navigator.clipboard.writeText(finalURL);
     alert("Copied to Clipboard!");
   };
-
-  // // Attach event listener to modal close event
-  // useEffect(() => {
-  //   const handleCloseModal = () => {
-  //     window.location.reload();
-  //   };
-
-  //   // Execute the reloadPage function when the modal is closed
-  //   if (!isOpen) handleCloseModal();
-
-  //   // Clean up event listener
-  //   return () => window.removeEventListener("beforeunload", handleCloseModal);
-  // }, [isOpen]);
 
   return (
     <>

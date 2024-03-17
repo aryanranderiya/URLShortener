@@ -8,11 +8,21 @@ module.exports = {
     "./src/**/*.{html,js}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
-    colors: {
-      primary: "#00bbff",
-    },
-  },
   darkMode: "class",
-  plugins: [nextui()],
+  plugins: [
+    nextui({
+      themes: {
+        light: {
+          colors: {
+            primary: "#00bbff",
+          },
+        },
+        dark: {
+          colors: {
+            primary: "#00bbff",
+          },
+        },
+      },
+    }),
+  ],
 };
