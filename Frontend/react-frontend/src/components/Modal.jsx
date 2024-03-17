@@ -48,7 +48,9 @@ export default function ModalComponent({ flag, finalURL, expireAfterSeconds }) {
                 Successfully Shortened Link!
               </ModalHeader>
               <ModalBody>
-                {finalURL}. {calculateTime()}
+                <b>{finalURL}</b>
+                <br></br>
+                {calculateTime()}
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="ghost" onPress={onClose}>

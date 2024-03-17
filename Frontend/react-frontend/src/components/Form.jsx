@@ -53,7 +53,7 @@ export default function Form() {
 
     setValidURL(urlRegex.test(e.target.value));
 
-    if (isValidURL) {
+    if (urlRegex.test(e.target.value)) {
       // Set the values for the form data
       setFormData({
         ...formData,
@@ -124,6 +124,7 @@ export default function Form() {
         });
 
         if (!response.ok) {
+          setisLoading(false);
           // If the response is not Okay then throw a new error to propagate to the catch
           const errorData = await response.json();
           throw new Error(errorData.error);
