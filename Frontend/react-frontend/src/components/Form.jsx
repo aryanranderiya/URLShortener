@@ -153,11 +153,7 @@ export default function Form() {
   // Main Return of the "Form"
   return (
     <>
-      <form
-        className="form flex flex-col gap-4"
-        onSubmit={onSubmit}
-        style={{ width: "30vw" }}
-      >
+      <form className="form flex flex-col gap-4" onSubmit={onSubmit}>
         <Tooltip
           content="This is the URL you want to shorten"
           offset={20}
@@ -173,7 +169,8 @@ export default function Form() {
             onChange={onChangeData_LongURL}
             variant="faded"
             required
-            className="w-full"
+            className="w-full px-10"
+            style={{ width: "30vw" }}
             size="md"
             color={!isValidURL ? "danger" : ""}
             errorMessage={!isValidURL && "Please enter a valid URL"}
