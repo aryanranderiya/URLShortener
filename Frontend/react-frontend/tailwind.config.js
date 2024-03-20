@@ -6,6 +6,8 @@ module.exports = {
 
   content: [
     "./src/**/*.{html,js}",
+    "./public/**/*.{html,js}",
+    "./build/**/*.{html,js}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: "class",

@@ -46,7 +46,11 @@ function App() {
         href="https://links.aryanranderiya.com"
         className="w-screen flex justify-center"
       >
-        <img src="banner.png" alt="Project Banner" width="35%"></img>
+        <img
+          src="banner.png"
+          alt="Project Banner"
+          className="h-auto max-w-md px-6"
+        ></img>
       </a>
     );
   };
