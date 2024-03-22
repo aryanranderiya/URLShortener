@@ -18,6 +18,7 @@
 - **Frontend:**
 
   - React.js
+  - NextUI
 
 - **Backend:**
 
